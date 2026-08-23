@@ -1,32 +1,26 @@
 package model;
 
+/*
+ * Clase hija de Pedido.
+ * Representa pedidos de encomienda de SpeedFast.
+ */
 public class PedidoEncomienda extends Pedido {
 
     /*
      * Constructor de PedidoEncomienda.
      * Llama al constructor de la clase padre Pedido.
      */
-    public PedidoEncomienda(String idPedido, String direccionEntrega) {
-        super(idPedido, direccionEntrega, "Encomienda");
+    public PedidoEncomienda(int idPedido, String direccionEntrega, double distanciaKm) {
+        super(idPedido, direccionEntrega, distanciaKm);
     }
 
     /*
-     * Sobrescribe el método heredado de Pedido.
-     * Aplica la asignación específica para pedidos de encomienda.
+     * Sobrescribe el método abstracto heredado de Pedido.
+     * Calcula el tiempo estimado para pedidos de encomienda.
      */
     @Override
-    public void asignarRepartidor() {
-        System.out.println("Asignando repartidor para encomienda.");
+    public int calcularTiempoEntrega() {
+        double tiempo = 20 + 1.5 * getDistanciaKm();
+        return (int) tiempo;
     }
-
-    /*
-     * Sobrecarga del método asignarRepartidor.
-     * Recibe el nombre del repartidor y realiza
-     * las validaciones propias de una encomienda.
-     */
-    public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("Validando peso y embalaje... OK");
-        System.out.println("Pedido asignado a " + nombreRepartidor);
-    }
-
 }

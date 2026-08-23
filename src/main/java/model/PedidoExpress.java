@@ -1,32 +1,31 @@
 package model;
 
-public class PedidoExpress extends Pedido{
+/*
+ * Clase hija de Pedido.
+ * Representa pedidos Express de SpeedFast.
+ */
+public class PedidoExpress extends Pedido {
 
     /*
      * Constructor de PedidoExpress.
      * Llama al constructor de la clase padre Pedido.
      */
-    public PedidoExpress(String idPedido, String direccionEntrega) {
-        super(idPedido, direccionEntrega, "Express");
+    public PedidoExpress(int idPedido, String direccionEntrega, double distanciaKm) {
+        super(idPedido, direccionEntrega, distanciaKm);
     }
 
     /*
-     * Sobrescribe el método heredado de Pedido.
-     * Aplica la asignación específica para pedidos Express.
+     * Sobrescribe el método abstracto heredado de Pedido.
+     * Calcula el tiempo estimado para pedidos Express.
      */
-
     @Override
-    public void asignarRepartidor() {
-        System.out.println("Asignando repartidor para pedido express.");
-    }
+    public int calcularTiempoEntrega() {
+        int tiempo = 10;
 
-    /*
-     * Sobrecarga del método asignarRepartidor.
-     * Recibe el nombre del repartidor asignado.
+        if (getDistanciaKm() > 5) {
+            tiempo += 5;
+        }
 
-     */
-    public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("Buscando repartidor más cercano con disponibilidad inmediata... OK");
-        System.out.println("Pedido asignado a " + nombreRepartidor);
+        return tiempo;
     }
 }

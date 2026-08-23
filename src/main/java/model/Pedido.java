@@ -1,65 +1,56 @@
 package model;
 
-import interfaces.Asignable;
+public abstract class Pedido {
 
-/*
- * Clase base que representa un pedido de SpeedFast.
- * Contiene los datos comunes para todos los tipos de pedido.
- */
-public class Pedido implements Asignable {
-
-    // Atributos principales del pedido
-    private String idPedido;
+    // Atributos comunes para todos los tipos de pedido
+    private int idPedido;
     private String direccionEntrega;
-    private String tipoPedido;
+    private double distanciaKm;
 
     /*
      * Constructor de la clase Pedido.
      * Inicializa los datos principales del pedido.
      */
-    public Pedido(String idPedido, String direccionEntrega, String tipoPedido) {
+    public Pedido(int idPedido, String direccionEntrega, double distanciaKm) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
-        this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
     }
 
-    // Obtiene el identificador del pedido
-    public String getIdPedido() {
+    public int getIdPedido() {
         return idPedido;
     }
 
-    // Permite modificar el identificador del pedido
-    public void setIdPedido(String idPedido) {
+    public void setIdPedido(int idPedido) {
         this.idPedido = idPedido;
     }
 
-    // Obtiene la dirección de entrega
     public String getDireccionEntrega() {
         return direccionEntrega;
     }
 
-    // Permite modificar la dirección de entrega
     public void setDireccionEntrega(String direccionEntrega) {
         this.direccionEntrega = direccionEntrega;
     }
 
-    // Obtiene el tipo de pedido
-    public String getTipoPedido() {
-        return tipoPedido;
+    public double getDistanciaKm() {
+        return distanciaKm;
     }
 
-    // Permite modificar el tipo de pedido
-    public void setTipoPedido(String tipoPedido) {
-        this.tipoPedido = tipoPedido;
+    public void setDistanciaKm(double distanciaKm) {
+        this.distanciaKm = distanciaKm;
     }
 
     /*
-     * Método general para asignar un repartidor.
-     * Las clases hijas sobrescribirán este comportamiento.
+     * Muestra los datos generales del pedido.
      */
-    @Override
-    public void asignarRepartidor() {
-        System.out.println("Asignando repartidor...");
+    public void mostrarResumen() {
+        System.out.println(getClass().getSimpleName() + " #" + idPedido);
+        System.out.println("Dirección: " + direccionEntrega);
+        System.out.println("Distancia: " + distanciaKm + " km");
     }
-
+    /*
+     * Cada clase hija debe implementar su propio cálculo.
+     */
+    public abstract int calcularTiempoEntrega();
 }

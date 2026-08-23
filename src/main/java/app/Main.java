@@ -16,13 +16,13 @@ public class Main {
          * Cada objeto corresponde a un tipo específico de pedido.
          */
         PedidoComida pedidoComida =
-                new PedidoComida("P001", "Av. Providencia 123");
+                new PedidoComida(1, "Av. Italia 456", 4);
 
         PedidoEncomienda pedidoEncomienda =
-                new PedidoEncomienda("P002", "Irarrazaval 200");
+                new PedidoEncomienda(2, "Av. Independencia 123", 6);
 
         PedidoExpress pedidoExpress =
-                new PedidoExpress("P003", "Av. Apoquindo 1500");
+                new PedidoExpress(3, "Av. Apoquindo 1500", 7);
 
 
         /*
@@ -35,28 +35,23 @@ public class Main {
         pedidos.add(pedidoEncomienda);
         pedidos.add(pedidoExpress);
 
-        System.out.println("=== POLIMORFISMO ===");
 
         /*
          * Polimorfismo.
-         * Se recorren todos los pedidos usando una referencia de tipo Pedido.
-         * Cada objeto ejecuta su propia versión sobrescrita de asignarRepartidor().
+         * Se recorren todos los pedidos utilizando
+         * una referencia general de tipo Pedido.
          */
         for (Pedido pedido : pedidos) {
-            pedido.asignarRepartidor();
+
+            pedido.mostrarResumen();
+
+            System.out.println(
+                    "Tiempo estimado de entrega: "
+                            + pedido.calcularTiempoEntrega()
+                            + " minutos"
+            );
+
+            System.out.println();
         }
-
-        System.out.println("\n=== SOBRECARGA ===");
-
-        /*
-         * Sobrecarga.
-         * Se utiliza la versión de asignarRepartidor()
-         * que recibe el nombre del repartidor como parámetro.
-         */
-        pedidoComida.asignarRepartidor("Carlos");
-        System.out.println();
-        pedidoEncomienda.asignarRepartidor("Paolo");
-        System.out.println();
-        pedidoExpress.asignarRepartidor("Pablo");
     }
 }
