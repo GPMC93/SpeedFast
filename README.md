@@ -1,70 +1,39 @@
-# SpeedFast
+# SpeedFast - Semana 3
 
-Proyecto desarrollado en Java para la asignatura **Desarrollo Orientado a Objetos II**.
+Proyecto desarrollado en Java para practicar Programación Orientada a Objetos, utilizando herencia, abstracción, polimorfismo e interfaces.
 
-## Actividad 2 - Clases abstractas y herencia
+## Descripción
 
-El proyecto simula distintos tipos de pedidos de la empresa SpeedFast y calcula el tiempo estimado de entrega según el tipo de pedido y la distancia recorrida.
+El sistema simula distintos tipos de pedidos de la empresa SpeedFast:
 
-## Estructura del proyecto
+- Pedido de comida
+- Pedido de encomienda
+- Pedido express
 
-El proyecto utiliza una clase abstracta principal llamada `Pedido` y tres clases derivadas:
+Cada tipo de pedido hereda de la clase abstracta `Pedido` y define su propio cálculo de tiempo de entrega.
 
-- `PedidoComida`
-- `PedidoEncomienda`
-- `PedidoExpress`
+Además, se utilizan interfaces para representar distintas capacidades de los pedidos:
 
-La clase `Pedido` contiene los atributos comunes:
+- `Despachable`
+- `Cancelable`
+- `Rastreable`
 
-- ID del pedido
-- Dirección de entrega
-- Distancia en kilómetros
+## Conceptos aplicados
 
-También contiene el método `mostrarResumen()` y define el método abstracto `calcularTiempoEntrega()`.
+En este proyecto se utilizaron los siguientes conceptos:
 
-## Cálculo de tiempos de entrega
-
-Cada tipo de pedido implementa su propia lógica:
-
-### PedidoComida
-
-15 minutos base + 2 minutos por cada kilómetro.
-
-### PedidoEncomienda
-
-20 minutos base + 1.5 minutos por cada kilómetro.
-
-### PedidoExpress
-
-10 minutos base.  
-Si la distancia es mayor a 5 km, se agregan 5 minutos adicionales.
-
-## Conceptos de Programación Orientada a Objetos utilizados
-
-- Abstracción
+- Clase abstracta
 - Herencia
-- Sobrescritura de métodos
 - Polimorfismo
-- Encapsulamiento
-- Clases y objetos
-- Constructores
-- Getters y setters
-- Colecciones con `ArrayList`
+- Sobrescritura de métodos
+- Sobrecarga de métodos
+- Interfaces
+- ArrayList
+- instanceof
 
-## Ejemplo de ejecución
+## Polimorfismo
 
-```text
-PedidoComida #1
-Dirección: Av. Italia 456
-Distancia: 4.0 km
-Tiempo estimado de entrega: 23 minutos
+Los distintos tipos de pedidos se almacenan dentro de un:
 
-PedidoEncomienda #2
-Dirección: Av. Independencia 123
-Distancia: 6.0 km
-Tiempo estimado de entrega: 29 minutos
-
-PedidoExpress #3
-Dirección: Av. Apoquindo 1500
-Distancia: 7.0 km
-Tiempo estimado de entrega: 15 minutos
+```java
+ArrayList<Pedido>

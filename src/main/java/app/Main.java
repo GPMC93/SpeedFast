@@ -5,6 +5,10 @@ import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
 
+import interfaces.Despachable;
+import interfaces.Cancelable;
+import interfaces.Rastreable;
+
 import java.util.ArrayList;
 
 public class Main {
@@ -37,13 +41,12 @@ public class Main {
 
 
         /*
-         * Polimorfismo.
-         * Se recorren todos los pedidos utilizando
-         * una referencia general de tipo Pedido.
+         * Se procesan los pedidos utilizando polimorfismo.
          */
         for (Pedido pedido : pedidos) {
 
             pedido.mostrarResumen();
+            pedido.asignarRepartidor();
 
             System.out.println(
                     "Tiempo estimado de entrega: "
@@ -51,7 +54,44 @@ public class Main {
                             + " minutos"
             );
 
+            if (pedido instanceof Despachable) {
+                ((Despachable) pedido).despachar();
+            }
+
             System.out.println();
+        }
+
+
+        /*
+         * Demostración de asignación manual.
+         */
+        System.out.println("=== Asignación manual ===");
+        pedidoComida.asignarRepartidor("Carlos");
+        System.out.println();
+
+
+        /*
+         * Demostración de cancelación.
+         */
+        System.out.println("=== Cancelación ===");
+
+        if (pedidoEncomienda instanceof Cancelable) {
+            ((Cancelable) pedidoEncomienda).cancelar();
+        }
+
+        System.out.println();
+
+
+        /*
+         * Historial de pedidos.
+         */
+        System.out.println("=== Historial ===");
+
+        for (Pedido pedido : pedidos) {
+
+            if (pedido instanceof Rastreable) {
+                ((Rastreable) pedido).verHistorial();
+            }
         }
     }
 }
