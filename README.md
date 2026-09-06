@@ -1,26 +1,18 @@
-# SpeedFast - Semana 3
+# SpeedFast - Semana 4
 
-Proyecto desarrollado en Java para practicar Programación Orientada a Objetos, utilizando herencia, abstracción, polimorfismo e interfaces.
+Proyecto desarrollado en Java para aplicar conceptos de Programación Orientada a Objetos y programación concurrente.
 
 ## Descripción
 
-El sistema simula distintos tipos de pedidos de la empresa SpeedFast:
+SpeedFast es un sistema que simula la gestión y entrega de distintos tipos de pedidos:
 
 - Pedido de comida
 - Pedido de encomienda
 - Pedido express
 
-Cada tipo de pedido hereda de la clase abstracta `Pedido` y define su propio cálculo de tiempo de entrega.
-
-Además, se utilizan interfaces para representar distintas capacidades de los pedidos:
-
-- `Despachable`
-- `Cancelable`
-- `Rastreable`
+El proyecto reutiliza la estructura orientada a objetos desarrollada anteriormente e incorpora concurrencia para simular a varios repartidores realizando entregas al mismo tiempo.
 
 ## Conceptos aplicados
-
-En este proyecto se utilizaron los siguientes conceptos:
 
 - Clase abstracta
 - Herencia
@@ -29,11 +21,50 @@ En este proyecto se utilizaron los siguientes conceptos:
 - Sobrecarga de métodos
 - Interfaces
 - ArrayList
-- instanceof
+- Runnable
+- Thread.sleep()
+- ExecutorService
+- Manejo de InterruptedException
 
-## Polimorfismo
+## Pedidos
 
-Los distintos tipos de pedidos se almacenan dentro de un:
+La clase abstracta `Pedido` contiene los atributos y comportamientos comunes de los pedidos.
+
+Las clases:
+
+- `PedidoComida`
+- `PedidoEncomienda`
+- `PedidoExpress`
+
+heredan de `Pedido` e implementan sus comportamientos específicos.
+
+## Interfaces
+
+Se utilizan las interfaces:
+
+- `Despachable`
+- `Cancelable`
+- `Rastreable`
+
+Estas permiten representar distintas capacidades de los pedidos.
+
+## Concurrencia
+
+La clase `Repartidor` implementa la interfaz `Runnable`.
+
+Cada repartidor posee un nombre y una lista de pedidos asignados. Dentro del método `run()` recorre sus pedidos y simula el tiempo necesario para realizar cada entrega mediante `Thread.sleep()` con tiempos aleatorios.
+
+## Ejecución concurrente
+
+En `Main` se crean tres repartidores:
+
+- Camila
+- Luis
+- Daniel
+
+Cada repartidor recibe dos pedidos.
+
+Para ejecutar las tareas concurrentemente se utiliza `ExecutorService` con un pool de tres hilos:
 
 ```java
-ArrayList<Pedido>
+ExecutorService executor = Executors.newFixedThreadPool(3);
