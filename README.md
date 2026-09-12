@@ -1,70 +1,55 @@
-# SpeedFast - Semana 4
-
-Proyecto desarrollado en Java para aplicar conceptos de Programación Orientada a Objetos y programación concurrente.
+# SpeedFast - Semana 5
 
 ## Descripción
 
-SpeedFast es un sistema que simula la gestión y entrega de distintos tipos de pedidos:
+Proyecto desarrollado en Java para simular la gestión concurrente de pedidos de SpeedFast.
 
-- Pedido de comida
-- Pedido de encomienda
-- Pedido express
-
-El proyecto reutiliza la estructura orientada a objetos desarrollada anteriormente e incorpora concurrencia para simular a varios repartidores realizando entregas al mismo tiempo.
+En esta semana se incorporó una zona de carga compartida por varios repartidores, utilizando sincronización para evitar que un mismo pedido sea retirado por más de un hilo al mismo tiempo.
 
 ## Conceptos aplicados
 
-- Clase abstracta
-- Herencia
-- Polimorfismo
-- Sobrescritura de métodos
-- Sobrecarga de métodos
-- Interfaces
-- ArrayList
-- Runnable
-- Thread.sleep()
-- ExecutorService
-- Manejo de InterruptedException
+- Programación orientada a objetos.
+- Herencia y clases abstractas.
+- Interfaces.
+- Enum para representar estados de los pedidos.
+- Runnable para representar tareas concurrentes.
+- ExecutorService para ejecutar varios repartidores.
+- Thread.sleep() para simular tiempos de entrega.
+- synchronized para proteger el acceso a recursos compartidos.
+- Manejo de InterruptedException.
 
-## Pedidos
+## Estados del pedido
 
-La clase abstracta `Pedido` contiene los atributos y comportamientos comunes de los pedidos.
+Los pedidos pueden tener los siguientes estados:
 
-Las clases:
+- PENDIENTE
+- EN_REPARTO
+- ENTREGADO
 
-- `PedidoComida`
-- `PedidoEncomienda`
-- `PedidoExpress`
+Cada pedido comienza automáticamente con estado PENDIENTE.
 
-heredan de `Pedido` e implementan sus comportamientos específicos.
+## Zona de carga
 
-## Interfaces
+La clase `ZonaDeCarga` almacena los pedidos disponibles.
 
-Se utilizan las interfaces:
+Los métodos para agregar y retirar pedidos utilizan `synchronized`, evitando que dos repartidores puedan retirar el mismo pedido simultáneamente.
 
-- `Despachable`
-- `Cancelable`
-- `Rastreable`
+## Repartidores
 
-Estas permiten representar distintas capacidades de los pedidos.
+Cada repartidor implementa la interfaz `Runnable`.
 
-## Concurrencia
+Los repartidores comparten una misma instancia de `ZonaDeCarga`, retiran pedidos disponibles y realizan las entregas de manera concurrente.
 
-La clase `Repartidor` implementa la interfaz `Runnable`.
+Durante la entrega, el estado del pedido cambia de:
 
-Cada repartidor posee un nombre y una lista de pedidos asignados. Dentro del método `run()` recorre sus pedidos y simula el tiempo necesario para realizar cada entrega mediante `Thread.sleep()` con tiempos aleatorios.
+PENDIENTE → EN_REPARTO → ENTREGADO
 
 ## Ejecución concurrente
 
-En `Main` se crean tres repartidores:
+Se utiliza un `ExecutorService` con tres hilos para ejecutar simultáneamente a tres repartidores.
 
-- Camila
-- Luis
-- Daniel
+El programa espera a que todos los repartidores terminen antes de finalizar la ejecución.
 
-Cada repartidor recibe dos pedidos.
+## Resultado
 
-Para ejecutar las tareas concurrentemente se utiliza `ExecutorService` con un pool de tres hilos:
-
-```java
-ExecutorService executor = Executors.newFixedThreadPool(3);
+La simulación permite procesar todos los pedidos de forma concurrente, evitando retiros duplicados mediante sincronización y finalizando cuando todos los pedidos han sido entregados.

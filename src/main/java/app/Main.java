@@ -1,17 +1,12 @@
 package app;
 
 import concurrencia.Repartidor;
+import concurrencia.ZonaDeCarga;
 
-import model.Pedido;
 import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
 
-import interfaces.Despachable;
-import interfaces.Cancelable;
-import interfaces.Rastreable;
-
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +17,7 @@ public class Main {
 
         /*
          * Creación de pedidos.
-         * Se crean seis pedidos para distribuirlos entre tres repartidores.
+         * Todos parten automáticamente con estado PENDIENTE.
          */
         PedidoComida pedidoComida1 =
                 new PedidoComida(1, "Av. Italia 456", 4);
@@ -44,107 +39,42 @@ public class Main {
 
 
         /*
-         * Lista general de pedidos.
-         * Se mantiene para demostrar polimorfismo y funcionalidades previas.
+         * Recurso compartido por todos los repartidores.
          */
-        ArrayList<Pedido> pedidos = new ArrayList<>();
+        ZonaDeCarga zonaDeCarga = new ZonaDeCarga();
 
-        pedidos.add(pedidoComida1);
-        pedidos.add(pedidoEncomienda1);
-        pedidos.add(pedidoExpress1);
-        pedidos.add(pedidoComida2);
-        pedidos.add(pedidoEncomienda2);
-        pedidos.add(pedidoExpress2);
+        System.out.println("=== Zona de carga inicializada ===");
 
-
-        /*
-         * Procesamiento general de los pedidos.
-         */
-        for (Pedido pedido : pedidos) {
-
-            pedido.mostrarResumen();
-            pedido.asignarRepartidor();
-
-            System.out.println(
-                    "Tiempo estimado de entrega: "
-                            + pedido.calcularTiempoEntrega()
-                            + " minutos"
-            );
-
-            if (pedido instanceof Despachable) {
-                ((Despachable) pedido).despachar();
-            }
-
-            System.out.println();
-        }
-
-
-        /*
-         * Demostración de asignación manual.
-         */
-        System.out.println("=== Asignación manual ===");
-        pedidoComida1.asignarRepartidor("Carlos");
-        System.out.println();
-
-
-        /*
-         * Demostración de cancelación.
-         */
-        System.out.println("=== Cancelación ===");
-
-        if (pedidoEncomienda1 instanceof Cancelable) {
-            ((Cancelable) pedidoEncomienda1).cancelar();
-        }
+        zonaDeCarga.agregarPedido(pedidoComida1);
+        zonaDeCarga.agregarPedido(pedidoEncomienda1);
+        zonaDeCarga.agregarPedido(pedidoExpress1);
+        zonaDeCarga.agregarPedido(pedidoComida2);
+        zonaDeCarga.agregarPedido(pedidoEncomienda2);
+        zonaDeCarga.agregarPedido(pedidoExpress2);
 
         System.out.println();
 
 
         /*
-         * Historial de pedidos.
+         * Los tres repartidores comparten la misma zona de carga.
          */
-        System.out.println("=== Historial ===");
+        Repartidor camila =
+                new Repartidor("Camila", zonaDeCarga);
 
-        for (Pedido pedido : pedidos) {
+        Repartidor luis =
+                new Repartidor("Luis", zonaDeCarga);
 
-            if (pedido instanceof Rastreable) {
-                ((Rastreable) pedido).verHistorial();
-            }
-        }
-
-        System.out.println();
+        Repartidor daniel =
+                new Repartidor("Daniel", zonaDeCarga);
 
 
         /*
-         * Listas de pedidos asignadas a cada repartidor
+         * Ejecución concurrente de los tres repartidores.
          */
-        ArrayList<Pedido> pedidosCamila = new ArrayList<>();
-        pedidosCamila.add(pedidoComida1);
-        pedidosCamila.add(pedidoExpress1);
+        System.out.println("=== Inicio de entregas ===");
 
-        ArrayList<Pedido> pedidosLuis = new ArrayList<>();
-        pedidosLuis.add(pedidoEncomienda1);
-        pedidosLuis.add(pedidoComida2);
-
-        ArrayList<Pedido> pedidosDaniel = new ArrayList<>();
-        pedidosDaniel.add(pedidoEncomienda2);
-        pedidosDaniel.add(pedidoExpress2);
-
-
-        /*
-         * Creación de repartidores
-         * Cada repartidor implementa Runnable
-         */
-        Repartidor camila = new Repartidor("Camila", pedidosCamila);
-        Repartidor luis = new Repartidor("Luis", pedidosLuis);
-        Repartidor daniel = new Repartidor("Daniel", pedidosDaniel);
-
-
-        /*
-         * Ejecución concurrente de los repartidors
-         */
-        System.out.println("=== Entregas concurrentes ===");
-
-        ExecutorService executor = Executors.newFixedThreadPool(3);
+        ExecutorService executor =
+                Executors.newFixedThreadPool(3);
 
         executor.execute(camila);
         executor.execute(luis);
@@ -155,7 +85,7 @@ public class Main {
         try {
 
             /*
-             * Espera hasta que todos los repartidores terminen
+             * Main espera hasta que todos los repartidores terminen.
              */
             if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
                 executor.shutdownNow();
@@ -167,6 +97,8 @@ public class Main {
             Thread.currentThread().interrupt();
         }
 
-        System.out.println("=== Todas las entregas finalizaron ===");
+        System.out.println(
+                "Todos los pedidos han sido entregados correctamente"
+        );
     }
 }

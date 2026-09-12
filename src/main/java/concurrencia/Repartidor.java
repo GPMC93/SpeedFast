@@ -1,10 +1,9 @@
 package concurrencia;
 
 import model.Pedido;
+import model.EstadoPedido;
 
-import java.util.ArrayList;
 import java.util.Random;
-
 
 /*
  * Representa a un repartidor que procesa pedidos de forma concurrente.
@@ -13,47 +12,62 @@ import java.util.Random;
 public class Repartidor implements Runnable {
 
     private String nombre;
-    private ArrayList<Pedido> pedidos;
+    private ZonaDeCarga zonaDeCarga;
     private Random random = new Random();
 
     /*
      * Constructor del repartidor.
      */
-    public Repartidor(String nombre, ArrayList<Pedido> pedidos) {
+    public Repartidor(String nombre, ZonaDeCarga zonaDeCarga) {
         this.nombre = nombre;
-        this.pedidos = pedidos;
+        this.zonaDeCarga = zonaDeCarga;
     }
 
     /*
-     * Ejecuta secuencialmente los pedidos asignados al repartidor.
-     * Cada repartidor puede ejecutarse en paralelo con otros repartidores.
+     * Retira pedidos desde la zona de carga compartida
+     * hasta que ya no queden pedidos disponibles.
      */
     @Override
     public void run() {
 
-        for (Pedido pedido : pedidos) {
+        while (true) {
+
+            Pedido pedido = zonaDeCarga.retirarPedido();
+
+            if (pedido == null) {
+                break;
+            }
+
+            pedido.setEstado(EstadoPedido.EN_REPARTO);
 
             System.out.println(
-                    "[Repartidor: " + nombre + "] Entregando "
-                            + pedido.getClass().getSimpleName()
-                            + " #" + pedido.getIdPedido() + "..."
+                    "[Repartidor - " + nombre + "] Retirando pedido #"
+                            + pedido.getIdPedido() + "...\n"
+                            + "[Repartidor - " + nombre + "] Estado: "
+                            + pedido.getEstado() + "\n"
+                            + "[Repartidor - " + nombre + "] Entregando pedido #"
+                            + pedido.getIdPedido() + "..."
             );
 
             try {
+
                 int tiempoEspera = 1000 + random.nextInt(2000);
+
                 Thread.sleep(tiempoEspera);
 
+                pedido.setEstado(EstadoPedido.ENTREGADO);
+
                 System.out.println(
-                        "[Repartidor: " + nombre + "] Pedido #"
-                                + pedido.getIdPedido()
-                                + " entregado."
+                        "[Repartidor - " + nombre + "] Estado: "
+                                + pedido.getEstado() + "\n"
                 );
 
             } catch (InterruptedException e) {
+
                 Thread.currentThread().interrupt();
 
                 System.out.println(
-                        "[Repartidor: " + nombre
+                        "[Repartidor - " + nombre
                                 + "] Entrega interrumpida."
                 );
 

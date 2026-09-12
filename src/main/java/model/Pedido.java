@@ -7,15 +7,17 @@ public abstract class Pedido {
     private String direccionEntrega;
     private double distanciaKm;
     private String nombreRepartidor;
+    private EstadoPedido estado;
 
     /*
-     * Constructor de la clase Pedido.
-     * Inicializa los datos principales del pedido.
+     * Constructor de la clase Pedido
+     * Inicializa los datos principales del pedido
      */
     public Pedido(int idPedido, String direccionEntrega, double distanciaKm) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.distanciaKm = distanciaKm;
+        this.estado = EstadoPedido.PENDIENTE;
     }
 
     public int getIdPedido() {
@@ -44,6 +46,14 @@ public abstract class Pedido {
 
     public String getNombreRepartidor() {
         return nombreRepartidor;
+    }
+
+    public EstadoPedido getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPedido nuevoEstado) {
+        this.estado = nuevoEstado;
     }
 
     /*
@@ -77,4 +87,11 @@ public abstract class Pedido {
      * de tiempo de entrega.
      */
     public abstract int calcularTiempoEntrega();
+
+    @Override
+    public String toString() {
+        return "Pedido #" + idPedido
+                + " | Dirección: " + direccionEntrega
+                + " | Estado: " + estado;
+    }
 }
